@@ -5,7 +5,7 @@ Use this guide before class. All keys go into `starter_v0/.env`. Never commit `.
 Pricing and quotas can change. The classroom target below is current for this lab setup as of 2026-06-02; re-check the provider page before a new cohort.
 
 Smoke tests below call tools through the registry (`TOOL_FUNCTIONS`) so they only
-verify that your API key works — they are not routing hints. Run them from `starter_v0/`.
+verify that your API key works - they are not routing hints. Run them from `starter_v0/`.
 
 ## 1. Model Provider
 
@@ -40,7 +40,7 @@ python scripts/preflight_provider.py --provider ollama --model qwen2.5:7b
 
 Tuỳ chọn trong `.env`: `OLLAMA_BASE_URL` (mặc định `http://localhost:11434/v1`), `OLLAMA_MODEL` (mặc định `qwen2.5:7b`).
 
-## 2. Tavily — `lookup`
+## 2. Tavily - `lookup`
 
 - Docs/credits: https://docs.tavily.com/documentation/api-credits
 - API key page: https://app.tavily.com
@@ -62,7 +62,7 @@ Quick test:
 python -c "from tools import TOOL_FUNCTIONS as T; print(T['lookup']('AI', max_results=1)['items'][0]['title'])"
 ```
 
-## 3. Firecrawl — `fetch`
+## 3. Firecrawl - `fetch`
 
 - Pricing: https://www.firecrawl.dev/pricing
 - Docs: https://docs.firecrawl.dev
@@ -84,7 +84,7 @@ Quick test:
 python -c "from tools import TOOL_FUNCTIONS as T; print(T['fetch']('https://openai.com/research/')['items'][0]['title'])"
 ```
 
-## 4. RapidAPI Twitter API45 — `timeline`, `social_search`
+## 4. RapidAPI Twitter API45 - `timeline`, `social_search`
 
 - API page: https://rapidapi.com/alexanderxbx/api/twitter-api45
 - Classroom target: free plan with 1,000 requests/month.
@@ -109,7 +109,7 @@ python -c "from tools import TOOL_FUNCTIONS as T; print(T['timeline']('sama', li
 python -c "from tools import TOOL_FUNCTIONS as T; print(T['social_search']('OpenAI', limit=1)['items'][0]['title'])"
 ```
 
-## 5. arXiv Bonus — `papers`, `paper_text`
+## 5. arXiv Bonus - `papers`, `paper_text`
 
 No API key is required. arXiv is rate-limited, so the tools wait between requests and retry lightly on HTTP 429.
 
@@ -128,7 +128,7 @@ python -c "from tools import TOOL_FUNCTIONS as T; print(T['paper_text']('1706.03
 
 Generated paper files go under `starter_v0/arxiv_papers/` and are ignored by git.
 
-## 6. Telegram Bonus — `send`
+## 6. Telegram Bonus - `send`
 
 Bonus action tool that posts text to a Telegram channel.
 
