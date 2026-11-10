@@ -351,7 +351,7 @@ def test_save_note_path_traversal_title_stays_inside_notes(notes_dir) -> None:
     assert not (notes_dir.parent.parent / "evil.md").exists()
 
 
-@pytest.mark.parametrize("title, content", [("", "x"), ("t", "   "), ("t", "x" * 50_001)])
+@pytest.mark.parametrize("title, content", [("", "x"), ("t", "   "), ("t", "x" * 50_001)], ids=["empty_title", "spaces", "too_long"])
 def test_save_note_bad_input_returns_error_and_writes_nothing(notes_dir, title, content) -> None:
     result = save_note_tool(title=title, content=content)
     assert result["error"] == "ValueError"
