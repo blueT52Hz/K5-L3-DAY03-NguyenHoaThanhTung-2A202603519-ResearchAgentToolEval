@@ -3,5 +3,122 @@
   "dataset_role": "group",
   "description": "Case do NHÓM tự viết thêm để cover thêm trường hợp. Mỗi case cần: id, phase='B', query HOẶC turns, failure_type (thuộc allowed_failure_types), và expect (tool_calls[...] hoặc no_tool=true). Nên kèm metadata.what_it_tests.",
   "allowed_failure_types": ["wrong_tool", "wrong_arg_value", "wrong_boundary", "unnecessary_tool", "out_of_scope", "missing_info"],
-  "cases": []
+  "cases": [
+    {
+      "id": "G01_wiki_concept_routing",
+      "phase": "B",
+      "suite": "group",
+      "query": "Transformer trong machine learning là gì?",
+      "failure_type": "wrong_tool",
+      "expect": {"tool_calls": [{"name": "wiki", "args": {}}]},
+      "metadata": {"skill": "new_tool_routing", "difficulty": "easy",
+        "what_it_tests": "Tool mới wiki: câu hỏi định nghĩa khái niệm → wiki, không phải lookup (web) hay papers."}
+    },
+    {
+      "id": "G02_hackernews_front_page",
+      "phase": "B",
+      "suite": "group",
+      "query": "Trên Hacker News hôm nay đang có gì hot?",
+      "failure_type": "wrong_tool",
+      "expect": {"tool_calls": [{"name": "hackernews", "args": {"sort": "top"}}]},
+      "metadata": {"skill": "new_tool_routing", "difficulty": "easy",
+        "what_it_tests": "Tool mới hackernews: nhắc tên Hacker News + 'hot' → hackernews(sort=top), không phải lookup hay social_search."}
+    },
+    {
+      "id": "G03_now_current_date",
+      "phase": "B",
+      "suite": "group",
+      "query": "Hôm nay là thứ mấy, ngày bao nhiêu?",
+      "failure_type": "wrong_tool",
+      "expect": {"tool_calls": [{"name": "now", "args": {}}]},
+      "metadata": {"skill": "new_tool_routing", "difficulty": "easy",
+        "what_it_tests": "Tool mới now: hỏi ngày/thứ → now, không tự đoán ngày từ kiến thức model và không dùng lookup."}
+    },
+    {
+      "id": "G04_news_not_wiki_boundary",
+      "phase": "B",
+      "suite": "group",
+      "query": "OpenAI tuần này có tin tức gì mới?",
+      "failure_type": "wrong_arg_value",
+      "expect": {"tool_calls": [{"name": "lookup", "args": {"query": "OpenAI", "topic": "news", "timeframe": "week"}}]},
+      "metadata": {"skill": "routing_boundary", "difficulty": "medium",
+        "what_it_tests": "Ranh giới wiki vs lookup: tên công ty nhưng hỏi TIN TỨC → lookup(topic=news, timeframe=week), không phải wiki."}
+    },
+    {
+      "id": "G05_out_of_scope_essay",
+      "phase": "B",
+      "suite": "group",
+      "query": "Viết giúp mình bài luận 500 chữ về biến đổi khí hậu để nộp bài tập.",
+      "failure_type": "out_of_scope",
+      "expect": {"no_tool": true, "behavior": "refuse"},
+      "metadata": {"skill": "out_of_scope", "difficulty": "medium",
+        "what_it_tests": "Viết bài tập/luận là ngoài phạm vi research → không gọi tool (kể cả save_note hay lookup)."}
+    },
+    {
+      "id": "G06_send_after_yes",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Đăng lên Telegram nội dung này: 'Bản tin AI 10/11: GPT-6 Cyber ra mắt'"},
+        {"role": "user", "content": "Có, mình xác nhận, đăng đi"}
+      ],
+      "failure_type": "wrong_boundary",
+      "expect": {"tool_calls": [{"name": "send", "args": {"confirmed": true}}]},
+      "metadata": {"skill": "multiturn_confirm_then_send", "difficulty": "hard",
+        "what_it_tests": "Luồng send đầy đủ: lượt 2 user đã xác nhận → gọi send(confirmed=true), không hỏi lại lần nữa."}
+    },
+    {
+      "id": "G07_send_cancelled",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Đăng bản tin AI hôm nay lên Telegram giúp mình"},
+        {"role": "user", "content": "Thôi, đừng đăng nữa, mình đổi ý rồi"}
+      ],
+      "failure_type": "wrong_boundary",
+      "expect": {"no_tool": true, "behavior": "acknowledge_cancel"},
+      "metadata": {"skill": "multiturn_cancel_action", "difficulty": "medium",
+        "what_it_tests": "User huỷ hành động gửi → không gọi send, cũng không clarify lại; chỉ xác nhận đã huỷ."}
+    },
+    {
+      "id": "G08_save_note_previous_content",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Tin AI hôm nay: (1) GPT-6 Cyber ra mắt cho đội bảo mật; (2) Anthropic công bố nghiên cứu mới về agent."},
+        {"role": "user", "content": "Lưu nội dung trên thành ghi chú tên 'tin AI 10-11' giúp mình"}
+      ],
+      "failure_type": "wrong_tool",
+      "expect": {"tool_calls": [{"name": "save_note", "args": {}}]},
+      "metadata": {"skill": "new_tool_routing_multiturn", "difficulty": "medium",
+        "what_it_tests": "Tool mới save_note: 'lưu lại thành ghi chú' nội dung lượt trước → save_note (local), không phải send (Telegram) hay format."}
+    },
+    {
+      "id": "G09_wiki_switch_language",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Andrej Karpathy là ai?"},
+        {"role": "user", "content": "Tra bản Wikipedia tiếng Anh nhé"}
+      ],
+      "failure_type": "wrong_arg_value",
+      "expect": {"tool_calls": [{"name": "wiki", "args": {"lang": "en"}}]},
+      "metadata": {"skill": "multiturn_correction_arg", "difficulty": "medium",
+        "what_it_tests": "Lượt 2 chỉ đổi ngôn ngữ → wiki(lang=en), giữ chủ thể Andrej Karpathy từ lượt 1."}
+    },
+    {
+      "id": "G10_hackernews_refine_sort_query_limit",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Trên Hacker News có gì hot?"},
+        {"role": "user", "content": "Không, mình muốn các bài mới nhất về LLM"},
+        {"role": "user", "content": "Chỉ lấy 3 bài thôi"}
+      ],
+      "failure_type": "wrong_arg_value",
+      "expect": {"tool_calls": [{"name": "hackernews", "args": {"sort": "latest", "query": "LLM", "limit": 3}}]},
+      "metadata": {"skill": "multiturn_carryover", "difficulty": "hard",
+        "what_it_tests": "3 lượt: đổi sort top→latest + thêm query LLM (lượt 2), rồi limit=3 (lượt 3); phải giữ cả 3 thay đổi."}
+    }
+  ]
 }
