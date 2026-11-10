@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Research Agent Poster</title>
+<style>
+:root{
+  --bg:#f6f7fb; --panel:#ffffff; --line:#e3e6ef; --text:#141824; --muted:#5d6579;
+  --accent:#c2410c; --accent-soft:#fff1e8; --ok:#0f8a5f; --ok-soft:#e5f6ee; --new:#4f46e5; --new-soft:#eef0ff;
+  --bar:#d9dde8; --code:#f1f3f8;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0f1420; --panel:#171e2e; --line:#2a3550; --text:#e8ecf5; --muted:#9aa6c0;
+    --accent:#ffb547; --accent-soft:#2b2416; --ok:#5ad1a0; --ok-soft:#14291f; --new:#9aa4ff; --new-soft:#1d2140;
+    --bar:#2a3550; --code:#0b0f18;
+  }
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font:15px/1.5 "Segoe UI",system-ui,-apple-system,Roboto,sans-serif;padding:28px 16px}
+.wrap{max-width:1180px;margin:0 auto;display:grid;gap:16px}
+header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px;border-bottom:2px solid var(--accent);padding-bottom:14px}
+.kicker{color:var(--accent);font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:12px}
+h1{font-size:clamp(28px,4vw,44px);line-height:1.1;font-weight:800}
+.sub{color:var(--muted);max-width:62ch;margin-top:6px}
+header > div:first-child{flex:1 1 640px}
+.meta{color:var(--muted);font-size:13px}
+.meta b{color:var(--text)}
+.grid{display:grid;grid-template-columns:1.15fr 1fr;gap:16px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+.card h2{font-size:13px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+code{font-family:"JetBrains Mono",Consolas,monospace;font-size:.86em;background:var(--code);padding:1px 6px;border-radius:5px}
+.tools{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.tool{border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+.tool b{font-family:"JetBrains Mono",Consolas,monospace;font-size:13px}
+.tool span:not(.tag){display:block;color:var(--muted);font-size:13px}
+.tool.new{background:var(--new-soft);border-color:var(--new)}
+.tag{font-size:10px;font-weight:700;padding:1px 6px;border-radius:999px;margin-left:6px;vertical-align:middle;background:var(--new);color:var(--panel)}
+.tag.bonus{background:var(--muted)}
+ol.q{list-style:none;display:grid;gap:8px;counter-reset:q}
+ol.q li{counter-increment:q;display:grid;grid-template-columns:26px 1fr;gap:8px;align-items:start}
+ol.q li::before{content:counter(q);width:24px;height:24px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font-weight:700;display:grid;place-items:center;font-size:13px}
+ol.q em{display:block;color:var(--muted);font-style:normal;font-size:13px}
+.bars{display:grid;gap:9px}
+.bar{display:grid;grid-template-columns:78px 1fr 44px;gap:10px;align-items:center;font-size:13px}
+.track{height:14px;background:var(--bar);border-radius:7px;overflow:hidden}
+.fill{height:100%;background:var(--accent);border-radius:7px}
+.fill.full{background:var(--ok)}
+.bar .v{font-variant-numeric:tabular-nums;font-weight:700;text-align:right}
+.note{color:var(--muted);font-size:12.5px;margin-top:8px}
+ul.g{list-style:none;display:grid;gap:7px}
+ul.g li{padding-left:22px;position:relative}
+ul.g li::before{content:"•";position:absolute;left:0;color:var(--ok);font-weight:800}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.stat{border:1px solid var(--line);border-radius:10px;padding:10px;text-align:center}
+.stat b{display:block;font-size:24px;line-height:1.1}
+.stat span{color:var(--muted);font-size:12px}
+footer{color:var(--muted);font-size:12.5px;text-align:center}
+@media (max-width:860px){.grid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:520px){.tools{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <div class="kicker">Day 03 · Research Agent Tool Eval</div>
+      <h1>Research Agent: hỏi lại khi thiếu, xác nhận trước khi gửi</h1>
+      <p class="sub">Đọc tweet theo tài khoản, tìm bài theo chủ đề trên X, tìm tin tức web, đọc URL, tìm và đọc paper arXiv, tra policy công ty, tra Wikipedia, Hacker News, gộp bản tin, lưu ghi chú và đăng Telegram <b>chỉ sau khi user đồng ý</b>.</p>
+    </div>
+    <div class="meta">
+      <div><b>Nguyễn Hoa Thanh Tùng</b> · 2A202603519</div>
+      <div>OpenRouter · <code>openai/gpt-4o-mini</code></div>
+      <div>Artifact <code>v3+p90e101385e25+t8136438ed2be</code></div>
+      <div>Demo: <code>streamlit run app.py</code> → <code>localhost:8501</code></div>
+    </div>
+  </header>
+
+  <section class="stats" aria-label="Kết quả eval">
+    <div class="stat"><b>20/20</b><span>base eval (v0: 13/20)</span></div>
+    <div class="stat"><b>10/10</b><span>extension: policy · arXiv · multi-URL</span></div>
+    <div class="stat"><b>10/10</b><span>group eval của nhóm (5 single + 5 multi)</span></div>
+    <div class="stat"><b>145</b><span>unit test pass · 0 skipped</span></div>
+  </section>
+
+  <div class="grid">
+    <section class="card">
+      <h2>Tool agent có (14 · <span style="color:var(--new)">4 tool mới</span>)</h2>
+      <div class="tools">
+        <div class="tool"><b>clarify</b><span>Hỏi lại: <code>text</code> khi thiếu thông tin, <code>yes_no</code> khi xác nhận</span></div>
+        <div class="tool"><b>timeline</b><span>Tweet mới nhất của 1 tài khoản (handle không @)</span></div>
+        <div class="tool"><b>social_search</b><span>Tweet theo chủ đề, <code>Top</code> / <code>Latest</code></span></div>
+        <div class="tool"><b>lookup</b><span>Web/tin tức (Tavily), <code>topic=news</code> + <code>timeframe</code></span></div>
+        <div class="tool"><b>fetch</b><span>Đọc nội dung 1 URL (Firecrawl)</span></div>
+        <div class="tool"><b>format</b><span>Gộp kết quả thành bản tin markdown</span></div>
+        <div class="tool"><b>send</b><span class="tag bonus">bonus</span><span>Đăng Telegram, cần user nói "có" trước</span></div>
+        <div class="tool"><b>policy</b><span class="tag bonus">bonus</span><span>Tra policy nội bộ theo <code>policy_area</code></span></div>
+        <div class="tool"><b>papers</b><span class="tag bonus">bonus</span><span>Tìm paper arXiv</span></div>
+        <div class="tool"><b>paper_text</b><span class="tag bonus">bonus</span><span>Tải PDF arXiv, trích text</span></div>
+        <div class="tool new"><b>wiki</b><span class="tag">MỚI</span><span>Wikipedia vi/en: "X là gì / là ai"</span></div>
+        <div class="tool new"><b>hackernews</b><span class="tag">MỚI</span><span>Hacker News: front page / mới nhất, lọc từ khóa</span></div>
+        <div class="tool new"><b>now</b><span class="tag">MỚI</span><span>Ngày giờ, thứ (giờ VN), ngày tương đối</span></div>
+        <div class="tool new"><b>save_note</b><span class="tag">MỚI</span><span>Lưu tóm tắt ra <code>notes/*.md</code>, không ghi đè</span></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Thử ngay các câu này</h2>
+      <ol class="q">
+        <li><div>Tweet mới nhất của Sam Altman là gì?<em>→ <code>timeline(screenname="sama")</code></em></div></li>
+        <li><div>Tin tức AI hôm nay có gì nổi bật?<em>→ <code>lookup(query="AI", topic="news", timeframe="day")</code></em></div></li>
+        <li><div>Tóm tắt 5 tweet mới nhất giúp mình<em>→ agent <b>hỏi lại</b> tài khoản nào</em></div></li>
+        <li><div>Transformer trong machine learning là gì?<em>→ <code>wiki</code> (tool mới)</em></div></li>
+        <li><div>Trên Hacker News hôm nay có gì hot?<em>→ <code>hackernews(sort="top")</code> (tool mới)</em></div></li>
+        <li><div>Làm bản tin AI hôm nay rồi đăng lên Telegram<em>→ <code>format</code>, rồi <b>dừng lại hỏi "có / không"</b> trước khi <code>send</code></em></div></li>
+        <li><div>Viết giúp mình hàm Python tính Fibonacci<em>→ <b>từ chối</b>: ngoài phạm vi research</em></div></li>
+      </ol>
+    </section>
+  </div>
+
+  <div class="grid">
+    <section class="card">
+      <h2>Case accuracy trên base eval (20 case)</h2>
+      <div class="bars">
+        <div class="bar"><span>v0 starter</span><div class="track"><div class="fill" style="width:65%"></div></div><span class="v">0.65</span></div>
+        <div class="bar"><span>v1 prompt</span><div class="track"><div class="fill" style="width:90%"></div></div><span class="v">0.90</span></div>
+        <div class="bar"><span>v2 tools.yaml</span><div class="track"><div class="fill full" style="width:100%"></div></div><span class="v">1.00</span></div>
+        <div class="bar"><span>v3-draft</span><div class="track"><div class="fill" style="width:90%"></div></div><span class="v">0.90</span></div>
+        <div class="bar"><span>v3 (+4 tool)</span><div class="track"><div class="fill full" style="width:100%"></div></div><span class="v">1.00</span></div>
+      </div>
+      <p class="note">v1: bỏ chỉ dẫn xấu (đoán, gửi không hỏi, ép 1 bước) · v2: mô tả khi nào dùng / không dùng + convention args · v3-draft: bảng routing làm hồi quy R10, M06 · v3: thêm 2 rule hẹp, base và extension đều 1.00.</p>
+    </section>
+
+    <section class="card">
+      <h2>Guardrail &amp; độ tin cậy</h2>
+      <ul class="g">
+        <li><b>Gửi Telegram có 3 lớp:</b> prompt + <code>tools.yaml</code> + <b>chặn ở code</b> (<code>confirmation_guard.py</code>). Model tự đặt <code>confirmed=true</code> trong chuỗi "format → send" thì bị dừng lại để hỏi user.</li>
+        <li>Thiếu tài khoản hoặc link thì gọi <code>clarify</code>, không bịa (v0 từng đoán <code>sama</code> và bịa URL).</li>
+        <li>Dòng chèn lệnh trong policy được tách ra <code>untrusted_text</code>, không coi là fact.</li>
+        <li><code>save_note</code> chặn path traversal, không ghi đè; <code>wiki</code> trả 404 thành <code>found=false</code>.</li>
+        <li>Unit test bắt được bug mà eval không thấy: <code>limit=-1</code> làm <code>timeline</code> mất tweet cuối. Đã sửa, có regression test.</li>
+      </ul>
+    </section>
+  </div>
+
+  <footer>Số liệu lấy từ <code>runs/*.json</code>, <code>analysis/run_summary.csv</code>, <code>artifacts/version_log.csv</code> · chi tiết trong <code>artifacts/REPORT.md</code></footer>
+</div>
+</body>
+</html>
