@@ -10,3 +10,5 @@ pypdf>=4.0.0
 tzdata>=2024.1
 # Tool unit tests:
 pytest>=8.0.0
+# Demo UI (app.py):
+streamlit>=1.40.0
