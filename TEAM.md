@@ -11,7 +11,7 @@
 | 1 | Nguyễn Hoa Thanh Tùng (Tùng 1) | 2A202603519 | Tool mới `wiki`; viết REPORT; toàn bộ bonus (3 tool thêm, sửa bug `limit`, guardrail gửi Telegram, UI Streamlit, poster, phân tích run) |
 | 2 | Tùng 2 | [MSSV] | v1: tối ưu `system_prompt.md` |
 | 3 | Tùng 3 | [MSSV] | Baseline v0 + version_log; viết unit test cho các stub TODO |
-| 4 | Tùng 4 | [MSSV] | v2: viết lại mô tả tool trong `tools.yaml`; 10 case eval nhóm |
+| 4 | Nguyễn Mạnh Quyền (Tùng 4) | 2A202603518 | v2: viết lại mô tả tool trong `tools.yaml`; 10 case eval nhóm |
 | 5 | Tùng 5 | [MSSV] | v3: bảng routing + rule multi-turn trong prompt; transcript chat live |
 
 ## Phân chia công việc (làm lần lượt, commit theo đúng thứ tự)

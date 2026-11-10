@@ -7,7 +7,7 @@
 ## Team
 
 - Team: K5-L3-DAY03
-- Members: Nguyễn Hoa Thanh Tùng (2A202603519) - danh sách đầy đủ và phân công trong `TEAM.md` ở gốc repo
+- Members: Nguyễn Hoa Thanh Tùng (2A202603519), Nguyễn Mạnh Quyền (2A202603518) - danh sách đầy đủ và phân công trong `TEAM.md` ở gốc repo
 - Provider/model: OpenRouter · `openai/gpt-4o-mini` (temperature 0)
 - Artifact hiện tại: `v3+p90e101385e25+t8136438ed2be` (prompt v3 + `tools.yaml` có 4 tool mới)
 
