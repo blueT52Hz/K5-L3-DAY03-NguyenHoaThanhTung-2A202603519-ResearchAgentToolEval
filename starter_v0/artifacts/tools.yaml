@@ -171,3 +171,56 @@ tools:
         max_pages: {type: integer, default: 5, description: "Max PDF pages to extract."}
         max_chars: {type: integer, default: 8000, description: "Max characters of text to return."}
       required: [arxiv_url]
+
+  # ---------------- Team-added tools ----------------
+  - name: wiki
+    description: >-
+      Get the Wikipedia summary of ONE concept, person, company or product (stable background knowledge).
+      USE for "X là gì", "X là ai", definitions and biographies (e.g. "Transformer là gì?", "Andrej Karpathy là ai?").
+      DO NOT use for news / what happened recently (use lookup), tweets (timeline/social_search) or research papers (papers).
+      If found=false, retry once with the English title and lang="en", or fall back to lookup.
+    parameters:
+      type: object
+      properties:
+        title: {type: string, default: "", description: "Article title = the concept/person name only, e.g. 'Transformer (machine learning model)', 'Andrej Karpathy'. No question words."}
+        lang: {type: string, enum: [vi, en], default: "vi", description: "'vi' for Vietnamese Wikipedia (default); 'en' for technical/English topics or when vi is not found."}
+      required: [title]
+
+  - name: hackernews
+    description: >-
+      Get stories from Hacker News (news.ycombinator.com), the tech/startup community link board.
+      USE when the user mentions Hacker News / HN / Y Combinator news, or asks what is hot in the tech developer community.
+      DO NOT use for general news (lookup with topic="news") or Twitter/X (social_search).
+    parameters:
+      type: object
+      properties:
+        query: {type: string, default: "", description: "Optional keyword filter, e.g. 'LLM', 'Rust'. Leave empty for the front page."}
+        sort: {type: string, enum: [top, latest], default: "top", description: "'top' = front page / hot / nổi bật (default); 'latest' = newest / mới nhất."}
+        limit: {type: integer, default: 5, description: "Number of stories (1-20); use the user's number if given."}
+      required: []
+
+  - name: now
+    description: >-
+      Return the current date, time and weekday (default timezone Asia/Ho_Chi_Minh), and optionally the date N days away.
+      USE when the user asks what day/date/time it is ("hôm nay là ngày mấy", "thứ mấy"), or needs a concrete date for
+      "hôm qua", "3 ngày trước", "tuần trước". Your own idea of today's date is unreliable — use this tool instead.
+      DO NOT use just to pick lookup's timeframe ("hôm nay" -> timeframe="day" directly).
+    parameters:
+      type: object
+      properties:
+        timezone: {type: string, default: "Asia/Ho_Chi_Minh", description: "IANA timezone, e.g. 'Asia/Ho_Chi_Minh', 'UTC', 'America/New_York'."}
+        offset_days: {type: integer, default: 0, description: "Days from today for target_date: 0 = hôm nay, -1 = hôm qua, -7 = tuần trước, 1 = ngày mai."}
+      required: []
+
+  - name: save_note
+    description: >-
+      Save markdown content (a summary, digest, research notes) to a LOCAL file notes/<title>.md.
+      USE when the user asks to "lưu lại", "ghi chú lại", "save this" — typically the digest/summary from the previous turn.
+      DO NOT use to post or publish anything (Telegram = send, which needs confirmation); DO NOT call it unless the user asked to save.
+    parameters:
+      type: object
+      properties:
+        title: {type: string, default: "", description: "Short note title used as filename, e.g. 'Tin AI 10-11'."}
+        content: {type: string, default: "", description: "Full markdown content to save (copy the summary/digest text, do not shorten it)."}
+        overwrite: {type: boolean, default: false, description: "true only if the user explicitly wants to replace an existing note; otherwise a new file is created."}
+      required: [title, content]
