@@ -7,6 +7,13 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
+from confirmation_guard import (
+    asked_yes_no,
+    blocked_event,
+    is_affirmative,
+    tools_requiring_confirmation,
+    wants_confirmed_action,
+)
 from env_loader import load_lab_env
 from providers import make_provider
 from providers.base import ToolCall
@@ -84,7 +91,11 @@ def run_model_tool_loop(
     tools: list[dict[str, Any]],
     model: str | None,
     max_tool_rounds: int,
+    confirmation_granted: bool = False,
 ) -> dict[str, Any]:
+    # confirmation_granted: the agent asked yes/no last turn AND the user answered yes.
+    # Without it, guarded action tools (requires_confirmation in TOOL.md) are not executed.
+    guarded_tools = tools_requiring_confirmation()
     working_messages = list(messages)
     rounds: list[dict[str, Any]] = []
     all_tool_events: list[dict[str, Any]] = []
@@ -112,8 +123,13 @@ def run_model_tool_loop(
         non_clarification_events: list[dict[str, Any]] = []
 
         for call in calls:
-            print(f"🔧 {call.name}({json.dumps(call.args, ensure_ascii=False, sort_keys=True)})")
-            event = execute_tool_call(call)
+            print(f"[tool] {call.name}({json.dumps(call.args, ensure_ascii=False, sort_keys=True)})")
+            if wants_confirmed_action(call.name, call.args, guarded_tools) and not confirmation_granted:
+                # Guardrail: do NOT execute; turn it into a yes/no pause handled below.
+                print(f"[guardrail] {call.name}(confirmed=true) blocked, asking the user to confirm first")
+                event = blocked_event(call.name, call.args)
+            else:
+                event = execute_tool_call(call)
             round_record["tool_results"].append(event)
             all_tool_events.append(event)
 
@@ -194,6 +210,7 @@ def main() -> None:
 
     history: list[dict[str, str]] = []
     turn_index = 0
+    last_result: dict[str, Any] | None = None
     while True:
         try:
             user_text = input("\nYou> ").strip()
@@ -223,6 +240,9 @@ def main() -> None:
             "tool_events": [],
         }
 
+        granted = asked_yes_no(last_result) and is_affirmative(user_text)
+        turn_record["confirmation_granted"] = granted
+        last_result = None
         try:
             result = run_model_tool_loop(
                 provider=provider,
@@ -230,7 +250,9 @@ def main() -> None:
                 tools=openai_tools,
                 model=args.model,
                 max_tool_rounds=args.max_tool_rounds,
+                confirmation_granted=granted,
             )
+            last_result = result
             turn_record.update(result)
             assistant_text = result["assistant_text"]
             print(f"\nAgent> {assistant_text}")
