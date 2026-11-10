@@ -5,12 +5,12 @@ __pycache__/
 .pytest_cache/
 .venv/
 
-# Secrets — never commit real keys
+# Secrets - never commit real keys
 .env
 .env.*
 !.env.example
 
-# Instructor-only — must NOT ship to the public student repo
+# Instructor-only - must NOT ship to the public student repo
 INTERNAL-DEMO-SCRIPT.md
 starter/
 
