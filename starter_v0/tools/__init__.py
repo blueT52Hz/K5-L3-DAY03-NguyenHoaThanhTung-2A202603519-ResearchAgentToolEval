@@ -17,6 +17,11 @@ from .policy.tool import search_company_policy
 from .social_search.tool import search_tweets
 from .send.tool import send_telegram
 from .lookup.tool import web_search
+# Team-added tools
+from .wiki.tool import wiki_summary
+from .hackernews.tool import hn_stories
+from .now.tool import current_datetime
+from .save_note.tool import save_markdown_note
 
 
 # NOTE (starter_v0): tool names here are intentionally vague. These keys are the
@@ -35,8 +40,11 @@ TOOL_FUNCTIONS = {
     "policy": search_company_policy,
     "papers": arxiv_search,
     "paper_text": get_arxiv_paper_text,
-    # TODO(student): register your new tool here, e.g. "my_tool": my_tool_function,
-    # then declare it in artifacts/tools.yaml and run `pytest tests/test_tool_contract.py`.
+    # Team-added tools (declared at the end of artifacts/tools.yaml)
+    "wiki": wiki_summary,
+    "hackernews": hn_stories,
+    "now": current_datetime,
+    "save_note": save_markdown_note,
 }
 
 
@@ -53,4 +61,3 @@ def to_openai_tools(declarations: list[dict[str, Any]]) -> list[dict[str, Any]]:
             "parameters": item.get("parameters", {"type": "object", "properties": {}}),
         },
     } for item in declarations]
-
